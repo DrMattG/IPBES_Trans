@@ -2,7 +2,9 @@
 title: "IPBES Transformative change workshop"
 author: "Matt"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output:output:
+  md_document:
+    variant: markdown_github
 ---
 
 ```{r setup, include=FALSE}
