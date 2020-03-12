@@ -22,7 +22,7 @@ My fields of expertise are in developing evidence-based decision systems (models
 
 My research interests are concerned with how we make the best use of limited data and present that to policy makers in a way that facilitates optimal decisions. I work with evidence synthesis techniques and include decision theoretic models as a way to develop (relatively) rapid decision support tools for managers and policy makers. One major focus of my work at the moment is in developing tools to facilitate FAIR data (Findable, Accessible, Interoperable, Reusable) data management within Norway and to develop tools which allow the development of integrated models from disperate datasets. 
 
-I see these approaches as providing a robust structure to policy decision making processes such as those carried out by IPBES. Transformative change infers to some extent rapid decision making; my approaches facilitate robust rapid decision making, allow opportunities and challenges on a system level to be identified and prioritised, and can be rapidly updated in the face of new knowledge.    
+I see these approaches as providing a robust structure to policy decision making processes. TMy approaches facilitate robust decision making, allow opportunities and challenges on a system level to be identified and prioritised, and can be rapidly updated in the face of new knowledge.    
 
 ### 2) What concept or approach of transformative change (if any) have you worked on or with? From your experience what are its main strengths and weaknesses?
 
@@ -183,6 +183,7 @@ multiTimeline %>%
 
 ### 6) In order to compile a reader which we can all consult in preparation for the workshop, we are currently collecting documents addressing transformative change in relation to IPBES, the CBD post-2020 process, the SDGs, etc. Are you aware of any other important documents and contexts in which transformative change is currently discussed? (Please provide web links or PDFs if you can.)
 
+I am not aware of any other documents. However, from the bibliometrix assessment the following authors were the most productive on the theme of transformative change.
 
 ```{r trend in publications, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -191,6 +192,7 @@ knitr::kable(data.frame(Authos=S$MostProdAuthors$`Authors       `, Articles=S$Mo
   
 ```
 
+These papers were the most highly cited. 
 
 ```{r,  echo=FALSE, warning=FALSE, message=FALSE}
 
