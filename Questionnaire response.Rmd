@@ -1,9 +1,10 @@
 ---
 title: "Questionnaire in preparation for the workshop “IPBES and transformative change”"
 author: "Matt"
-date: '`r format(Sys.time(), "%d %B, %Y")`'
-output: html_document
-fig_caption: yes
+date: "12.03.2020"
+output:
+  word_document: default
+  fig_caption: yes
 ---
 
 ```{r setup, include=FALSE}
