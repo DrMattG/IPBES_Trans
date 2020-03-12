@@ -1,0 +1,213 @@
+---
+title: "Questionnaire in preparation for the workshop “IPBES and transformative change”"
+author: "Matt"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(revtools)
+library(bibliometrix)
+library(tidyverse)
+
+```
+
+### 1) What is your professional background and what are your fields of expertise and your main research interests (related to IPBES and/or transformative change)? 
+
+I have a background in applied ecology and conservation. I have worked for various NGOs in Southern and East Africa focusing on human wildlife coexisitence, basic biodiversity inventory and to an extent tourism. I have also worked for a UK registered conservation charity focused on the conservation of the most heavily utilised (by humans) and hence threatened group of birds - the Galliformes (pheasants, partridges, quails, francolins, grouse, etc.). In this role I focused mainly of capacity building for researchers and conservation professionals in SE Asia. In the last 8 years I moved back in to broadly academic research roles based first at Newcastle University in the UK and now at the Norwegian Institute for Nature Research (NINA: https://www.nina.no/english/Home).  
+
+My fields of expertise are in developing evidence-based decision systems (models) that incorporate various data types (broadly both natural and social science components) of varying quality (i.e. some with greater uncertainty than others). There is a certain level of pragmatism in these approaches - evidence-based decision making can be limited by the availabilty of good quality evidence so I try and build "inference engines" that allow an answer to be reached but express the level of uncertainty and highlight future research needs.  
+
+My research interests are concerned with how we make the best use of limited data and present that to policy makers in a way that facilitates optimal decisions. I work with evidence synthesis techniques and include decision theoretic models as a way to develop (relatively) rapid decision support tools for managers and policy makers. One major focus of my work at the moment is in developing tools to facilitate FAIR data (Findable, Accessible, Interoperable, Reusable) data management within Norway and to develop tools which allow the development of integrated models from disperate datasets. 
+
+I see these approaches as providing a robust structure to policy decision making processes such as those carried out by IPBES. Transformative change infers to some extent rapid decision making; my approaches facilitate robust rapid decision making, allow opportunities and challenges on a system level to be identified and prioritised, and can be rapidly updated in the face of new knowledge.    
+
+### 2) What concept or approach of transformative change (if any) have you worked on or with? From your experience what are its main strengths and weaknesses?
+
+I am new to the phrase "transformative change" (I was exposed to it first through the CBD/Norwegian government Trondheim Conference in 2019). From my limited experience and reading I fear the major weakness of the concept is that it is ill-defined (to make it useful for positive action by policy makers). It can be dismissed as yet another biodiversity buzzword that will morph in to a new concept in 10 years time (cf Ecosystem function -> Ecosystem services -> Natures benefits). However, I see the main strenghths of the concept(s) as being firmly routed in interdiscplinary collaboration, and, although not often explictly stated, with a systems approach rather than focusing on individual subject silos. 
+
+### 3) In which (political) contexts is transformative change currently relevant and why is it becoming increasingly important?
+
+Transformative change is rapidly becoming important across a spectrum of contexts and fields. In the peer-reviewed literature (which may in some cases lead or in others follow from policy in the use of such terms; I am not sure which is the case here) there has been an increase in the number of papers using the term. I searched for the topic "transformative change" on the Web of Science Core Collection to get an understanding of the key papers and themes. 
+
+```{r Annual production ,echo=FALSE, warning=FALSE, message=FALSE, include=FALSE}
+
+D <- readFiles("data/savedrecs.bib")
+M <- convert2df(D, dbsource = "isi", format = "bibtex")
+results <- biblioAnalysis(M, sep = ";")
+S <- summary(object = results, k = 20, pause = FALSE)
+```
+
+There has been a rapid increase in the number of peer-reviewed articles that use the term "transformative change" in the title, abstract or keywords, particularly since 2012. 
+
+
+```{r ,echo=FALSE, warning=FALSE, message=FALSE, fig.cap="**Increase in the use of the term 'transformative change' in the title, abstract or keywords of peer-reviewed papers**"}
+dat<- as.data.frame(S$AnnualProduction)
+names(dat)<-c("Year", "Articles")
+dat%>%
+  filter(!Year=="2020") %>% 
+  ggplot(aes(Year, Articles))+
+  geom_point(colour= "blue", size=4)+
+  ggthemes::theme_base()
+
+```
+
+
+This academic use of the term comes from several different sources, but predominately from journals that address sustainabiliy and climate. Medical journals, social policy journals and global policy journals also feature. 
+
+
+```{r which journals, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="**Wordcloud of the names of the journals that have published papers on 'transformative change'. A larger font size indicates a greater number of articles**"}
+Journals<-data.frame("Journals"=M$SO)
+Journals %>% 
+  arrange(Journals) %>%
+  group_by(Journals) %>% 
+  tally() %>% 
+  arrange(-n)->dat2
+set.seed(101010)
+wordcloud::wordcloud(words =dat2$Journals, freq = dat2$n, min.freq = 2, max.words=200, random.order=FALSE, rot.per=0.35,            colors= RColorBrewer::brewer.pal(8, "Dark2"))
+```
+
+
+```{r Create a co-citation network, echo=FALSE, warning=FALSE, message=FALSE}
+# # 
+# 
+# NetMatrix <- biblioNetwork(M, analysis = "co-citation", network = "references", sep = ";")
+# 
+# # Plot the network
+# net=networkPlot(NetMatrix, n = 500, Title = "Co-Citation Network", type = "fruchterman", size=T, remove.multiple=FALSE, label=NA,edgesize = 3)
+
+```
+
+
+Keyword co-occurances between the latest 500 peer-reviewed papers found in the search of the Web of Science Core Collection show that terms such as management, governance, resilience and climate change are most common. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="**Keyword co-occurance network plot showing three clusters of keyword co-occurance**"}
+NetMatrix <- biblioNetwork(M, analysis = "co-occurrences", network = "keywords", sep = ";")
+
+# Plot the network
+net=networkPlot(NetMatrix, normalize="association", weighted=T, n = 30, Title = "Keyword Co-occurrences", type = "fruchterman", size=T,edgesize = 5,labelsize=0.7)
+
+```
+
+A topic model supports five key topics; "***social, article, understand, structure, power***", "***health, study, develop, model, provide***", "***search, practice, community, educators, learn***", "***transform, system, change, sustain, governing***" and "***policy, develop, challenge, adapt, global***".  
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="**Topic model results showing the most abundant terms in each of the five topics supported by the model**"}
+
+#data2 <- read_bibliography("data/savedrecs.bib")
+#screen_topics(data2)
+
+tm=readRDS("data/Topic_model.rds")
+tm$plot_ready$y %>% 
+  group_by(topic) %>%
+  arrange(-n) %>% 
+  top_n(n,10) %>% 
+  filter(n>200) %>% 
+  ggplot(aes(term, n))+
+  geom_histogram(stat="identity", fill="blue")+
+  coord_flip()+
+  facet_grid(~topic)+
+  ggthemes::theme_base()+
+  theme(axis.text.x = element_text(size=8, angle = 90))
+
+```
+
+
+
+### 4) Where do you see the key challenges of IPBES conducting an ‘assessment on transformative change’ 
+
+
+
+#### a) on a conceptual and methodological level?
+
+* Lack of evidence synthesis
+    + Need for systems models to identify gaps in and gluts in knowledge (where systematic review/mapping can take place). Gaps need to be prioritised using formal robust methods to identify research needs. These primary research needs should then become specific goals in national and international funding schemes 
+    + Need for formal evidence synthesis within and crutically across disciplinary boundaries
+    + Robust and repeatable quality assessment (reduced subjectivity than the status quo) needs to be applied and evidence appropriately weighted and used to develop decision theoretic models to aid policy development
+    + Scenario analysis, Agent based models, etc. need to be developed to "experimentally test" (simulate) the effects of policy changes on society and on biodiversity. Adverse or unintentional consequences need to be identified and mitigated against. 
+    
+* Lack of primary evidence 
+    + From above: research needs to be formally prioritised to close the most important gaps in our knowledge (i.e. those that make the biggest reduction to uncertainty in the system)
+    + Research and researchers need to work across discplines and cultures. Common language and methodological understanding (trust) need to be achieved to facilitate this work. True interdiscplinary work needs to be adequately funded by research funding bodies 
+
+* Silo nature of funding bodies 
+
+
+
+#### b) on a normative and political level?
+
+* Short-term nature of politics in most (democratic) countries. 
+* Economic value given higher weighting by governments 
+* A lack of scientific expertise in governments or a one-scientist fits all approach (a medicial scientist being asked to comment on biodiversity policy or visa versa)
+* "Silo" structure of governments - they do not often coordiante between department structures
+
+
+
+### 5) Where do you see the key challenges of policy trying to catalyse transformative change
+
+
+#### a) on a conceptual and methodological level?
+
+* Rapid identification and mitigatation of unforseen adverse interactions and outcomes
+* Adequately communicating scientific uncertainty to lat auidences 
+
+
+#### b) on a normative and political level?
+
+* Short-term nature of politics in most (democratic) countries. 
+* Economic value given higher weighting by governments 
+* A lack of scientific expertise in governments or a one-scientist fits all approach (a medicial scientist being asked to comment on biodiversity policy or visa versa)
+* "Silo" structure of governments - they do not often coordiante between department structures
+
+*One key challenge will be to engage the wider public in the concept of transformative change. There is little engagement with the topic as it stands. For example looking at the Google trends index shows that the term was most searched in the late 2007 and has remained at around 25% of this maximum ever since. This suggests that the term is not in common parlance. Clear definition and outreach may be benefitical.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="**Google trends index (max search traffic = 100) per year for 'transformative change' search term**"}
+multiTimeline <- read_csv("data/multiTimeline.csv", 
+     skip = 1)
+names(multiTimeline)<-c("month", "search_index")
+multiTimeline %>%
+  mutate(Year=substr(month,1,4)) %>% 
+  mutate(month=substr(month, 5,7)) %>% 
+  ggplot(aes(month,search_index))+
+  geom_line(group=1, colour="blue")+
+  ggthemes::theme_base()+
+   theme(axis.text.x = element_text(angle = 90, hjust = 1, size=8))+facet_wrap(~as.integer(Year))
+
+```
+
+
+
+### 6) In order to compile a reader which we can all consult in preparation for the workshop, we are currently collecting documents addressing transformative change in relation to IPBES, the CBD post-2020 process, the SDGs, etc. Are you aware of any other important documents and contexts in which transformative change is currently discussed? (Please provide web links or PDFs if you can.)
+
+
+```{r trend in publications, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+knitr::kable(data.frame(Authos=S$MostProdAuthors$`Authors       `, Articles=S$MostProdAuthors$Articles))
+  
+```
+
+
+```{r,  echo=FALSE, warning=FALSE, message=FALSE}
+
+knitr::kable(data.frame(Paper=S$MostCitedPapers$`Paper         `, Total_citations = S$MostCitedPapers$TC , Total_citations_per_yr=S$MostCitedPapers$TCperYear))
+
+```
+
+
+### 7) Do you have any suggestions for additional avenues for publishing the results of this workshop – beyond informing the IPBES scoping meeting for the transformative change assessment in mid-April?
+
+Nature sustainability
+
+### 8) Please sum up your most important association regarding “transformative change” in *one* sentence (no more than 25 words; the shorter, the better). This can be your idea of why transformative change matters, how transformative change can be assessed/evaluated, what is needed to achieve transformative change, or why it is a problem. It can also be a witty statement, your own version of a definition, etc.
+
+Short-term pain for long-term gain for the benefit of global society, biodiversity and the climate. 
+
+
+
+
+
